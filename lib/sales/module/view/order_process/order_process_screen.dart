@@ -64,9 +64,9 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               )
               : Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              children: [
+              margin: EdgeInsets.all(10),
+              child: Column(
+                children: [
                 /*Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width,
@@ -107,31 +107,31 @@ class _OrderScreenState extends State<OrderScreen> {
                   },
                 ),
               ),*/
-                TextFormField(
-                  controller: name,
-                  decoration: const InputDecoration(
-                      hintText: 'Search by name',
-                      border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.search)
+                  TextFormField(
+                    controller: name,
+                    decoration: const InputDecoration(
+                        hintText: 'Search by name',
+                        border: OutlineInputBorder(),
+                        suffixIcon: Icon(Icons.search)
+                    ),
+                    onChanged: (value) => dashboardController.runFilter(value),
                   ),
-                  onChanged: (value) => dashboardController.runFilter(value),
-                ),
-                Obx((){
-                  return Expanded(
-                    child: dashboardController.isLoading5.value
+                  Obx((){
+                    return Expanded(
+                      child: dashboardController.isLoading5.value
                         ? Center(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.all(10.0),
-                            child: CircularProgressIndicator(
-                              color: AppColor.appBarColor,
-                            ),
+                          child: Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(10.0),
+                                child: CircularProgressIndicator(
+                                  color: AppColor.appBarColor,
+                                ),
+                              ),
+                              Text('Loading...')
+                            ],
                           ),
-                          Text('Loading...')
-                        ],
-                      ),
-                    )
+                        )
                         : ListView.builder(
                         itemCount: dashboardController.foundDealerList.length,
                         itemBuilder: (context, index) {

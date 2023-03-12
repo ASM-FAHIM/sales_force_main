@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petronas_project/sales/module/view/incentive_collect/dealer_list.dart';
 import 'package:petronas_project/sales/module/view/incentive_collect/incentive_screen.dart';
 import 'package:petronas_project/sales/widget/small_text.dart';
 import '../../screen/login_page.dart';
@@ -207,7 +208,7 @@ class CusDrawer extends StatelessWidget {
                       ListTile(
                         onTap: () {
                           Get.back();
-                          Get.to(() => IncentiveScreen());
+                          Get.to(() => DealerListScreen());
                         },
                         leading: const Icon(
                           MdiIcons.orderAlphabeticalAscending,

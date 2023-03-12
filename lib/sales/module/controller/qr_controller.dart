@@ -6,6 +6,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:petronas_project/sales/constant/app_constants.dart';
+import '../model/dealer_model.dart';
 import '../model/mechanic_list_model.dart';
 import '../model/qr_return_model.dart';
 
@@ -111,5 +112,71 @@ class QrController extends GetxController {
         })
     );
     print('------------${response.body}');
+  }
+
+
+  //Dealer list fetching for mechanic and qr scanner
+  ///dealer fetch and insert to local db
+  RxBool isLoading1 = false.obs;
+  final dealerList = <DealerModel>[].obs;
+  void getDealerInfo(String xsp) async{
+    try{
+      isLoading1(true);
+      //new dealer api for petronas http://${AppConstants.baseurl}/salesforce/dealerinfo.php?user=1000
+      var response = await http.get(Uri.parse('http://${AppConstants.baseurl}/salesforce/dealerinfo.php?xsp=$xsp'));
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body);
+        final dealers = <DealerModel>[];
+        for(var dealersList in jsonData){
+          dealers.add(DealerModel.fromJson(dealersList));
+        }
+        dealerList.assignAll(dealers);
+        isLoading1(false);
+        print('List of Dealers: $dealers');
+      }else{
+        isLoading1(false);
+        print("There is an Error ${response.statusCode}");
+      }
+    }catch(e){
+      print("Something went wrong $e");
+    }
+  }
+
+  /*RxBool isNameFound = false.obs;
+  List foundedDealerList = [];
+  // RxBool enableDealerList = false.obs;
+  void runFilter(String keyword) async{
+    try{
+      isNameFound(true);
+      List result = [];
+      if(keyword.isEmpty){
+        result = dealerList;
+        print('====================================0000000000000000000000000$result');
+        isNameFound(false);
+      }else{
+        result = dealerList.where((name) => name.xorg.toLowerCase().contains(keyword.toLowerCase())).toList();
+        isNameFound(false);
+        print('Actual list : $result');
+      }
+      foundedDealerList = result;
+      print('Founded Dealer List: $foundedDealerList');
+      isNameFound(false);
+    }catch(e){
+      isNameFound(false);
+      print('Error Occured: $e');
+    }
+  }*/
+  RxString searchQuery = ''.obs;
+  List<DealerModel> get filteredDeals {
+    if (searchQuery.value.isEmpty) {
+      return dealerList;
+    } else {
+      return dealerList.where((dealer) =>
+          dealer.xorg.toLowerCase().contains(searchQuery.value.toLowerCase())).toList();
+    }
+  }
+
+  void search(String query) {
+    searchQuery.value = query;
   }
 }
