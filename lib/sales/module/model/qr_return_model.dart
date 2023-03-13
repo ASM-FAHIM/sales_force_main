@@ -10,32 +10,36 @@ String qrReturnModelToJson(QrReturnModel data) => json.encode(data.toJson());
 
 class QrReturnModel {
   QrReturnModel({
-    required this.code,
-    required this.batch,
+    required this.zid,
+    required this.xid,
+    required this.xbatch,
     required this.xdate,
-    required this.squ,
-    required this.perLiterDis,
+    required this.xbase,
+    required this.xdisc,
   });
 
-  String code;
-  String batch;
+  int zid;
+  String xid;
+  String xbatch;
   String xdate;
-  String squ;
-  String perLiterDis;
+  String xbase;
+  String xdisc;
 
   factory QrReturnModel.fromJson(Map<String, dynamic> json) => QrReturnModel(
-    code: json["code"],
-    batch: json["batch"],
+    zid: json["zid"],
+    xid: json["xid"],
+    xbatch: json["xbatch"],
     xdate: json["xdate"],
-    squ: json["squ"],
-    perLiterDis: json["perLiter_Dis"],
+    xbase: json["xbase"],
+    xdisc: json["xdisc"],
   );
 
   Map<String, dynamic> toJson() => {
-    "code": code,
-    "batch": batch,
+    "zid": zid,
+    "xid": xid,
+    "xbatch": xbatch,
     "xdate": xdate,
-    "squ": squ,
-    "perLiter_Dis": perLiterDis,
+    "xbase": xbase,
+    "xdisc": xdisc,
   };
 }

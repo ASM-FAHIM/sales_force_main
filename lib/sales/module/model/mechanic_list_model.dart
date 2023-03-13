@@ -10,72 +10,60 @@ String mechanicModelToJson(List<MechanicModel> data) => json.encode(List<dynamic
 
 class MechanicModel {
   MechanicModel({
-    required this.id,
-    required this.customer,
-    required this.cusName,
-    required this.mobile,
-    required this.outlate,
-    required this.address,
-    required this.salesPerson,
-    required this.spPhone,
-    required this.tsoBpId,
-    required this.tsoBpName,
-    required this.area,
-    required this.territory,
-    required this.location,
-    required this.dealerId,
-    required this.dealerName,
+    required this.xid,
+    required this.xnamem,
+    required this.xcus,
+    required this.xname,
+    required this.xmobile,
+    required this.xadd,
+    required this.xsalesperson,
+    required this.xresphone,
+    required this.xtso,
+    required this.xarea,
+    required this.xterritory,
+    required this.xlocation,
   });
 
-  int id;
-  String customer;
-  String cusName;
-  String mobile;
-  String outlate;
-  String address;
-  String salesPerson;
-  String spPhone;
-  String tsoBpId;
-  String tsoBpName;
-  String area;
-  String territory;
-  String location;
-  String dealerId;
-  String dealerName;
+  String xid;
+  String xnamem;
+  String xcus;
+  String xname;
+  String xmobile;
+  String xadd;
+  String xsalesperson;
+  String xresphone;
+  String xtso;
+  String xarea;
+  String xterritory;
+  String xlocation;
 
   factory MechanicModel.fromJson(Map<String, dynamic> json) => MechanicModel(
-    id: json["ID"],
-    customer: json["customer"],
-    cusName: json["cus_name"],
-    mobile: json["mobile"],
-    outlate: json["outlate"],
-    address: json["address"],
-    salesPerson: json["sales_person"],
-    spPhone: json["sp_phone"],
-    tsoBpId: json["tso_bp_id"],
-    tsoBpName: json["tso_bp_name"],
-    area: json["area"],
-    territory: json["territory"],
-    location: json["location"],
-    dealerId: json["dealer_id"],
-    dealerName: json["dealer_name"],
+    xid: json["xid"],
+    xnamem: json["xnamem"],
+    xcus: json["xcus"],
+    xname: json["xname"],
+    xmobile: json["xmobile"],
+    xadd: json["xadd"],
+    xsalesperson: json["xsalesperson"],
+    xresphone: json["xresphone"],
+    xtso: json["xtso"],
+    xarea: json["xarea"],
+    xterritory: json["xterritory"],
+    xlocation: json["xlocation"],
   );
 
   Map<String, dynamic> toJson() => {
-    "ID": id,
-    "customer": customer,
-    "cus_name": cusName,
-    "mobile": mobile,
-    "outlate": outlate,
-    "address": address,
-    "sales_person": salesPerson,
-    "sp_phone": spPhone,
-    "tso_bp_id": tsoBpId,
-    "tso_bp_name": tsoBpName,
-    "area": area,
-    "territory": territory,
-    "location": location,
-    "dealer_id": dealerId,
-    "dealer_name": dealerName,
+    "xid": xid,
+    "xnamem": xnamem,
+    "xcus": xcus,
+    "xname": xname,
+    "xmobile": xmobile,
+    "xadd": xadd,
+    "xsalesperson": xsalesperson,
+    "xresphone": xresphone,
+    "xtso": xtso,
+    "xarea": xarea,
+    "xterritory": xterritory,
+    "xlocation": xlocation,
   };
 }

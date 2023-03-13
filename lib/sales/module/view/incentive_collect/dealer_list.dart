@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:petronas_project/sales/module/controller/login_controller.dart';
 import 'package:petronas_project/sales/module/controller/qr_controller.dart';
 import 'package:petronas_project/sales/module/view/incentive_collect/incentive_screen.dart';
+import 'package:petronas_project/sales/module/view/incentive_collect/qr_screen.dart';
 
 import '../../../constant/colors.dart';
 import '../../../constant/dimensions.dart';
@@ -87,7 +88,8 @@ class _DealerListScreenState extends State<DealerListScreen> {
                               child: ListTile(
                                 onTap: () {
                                   // go to Mechanic screen
-                                  Get.to(() => IncentiveScreen());
+                                   Get.to(() => IncentiveScreen(xcus: qrController.filteredDeals[index].xcus));
+                                  //Get.to(() => QrScreen());
                                 },
                                 tileColor: AppColor.appBarColor,
                                 title: Row(

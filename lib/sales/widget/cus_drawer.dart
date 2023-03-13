@@ -204,6 +204,21 @@ class CusDrawer extends StatelessWidget {
                         ),
                         title: SmallText(text: 'Around Me', size: 20,),
                       ),*/
+                      /*if(loginController.zID.value == '300210')...[
+                        const CusDivider(),
+                        ListTile(
+                          onTap: () {
+                            Get.back();
+                            Get.to(() => DealerListScreen());
+                          },
+                          leading: const Icon(
+                            MdiIcons.orderAlphabeticalAscending,
+                            color: AppColor.appBarColor,
+                            size: 25,
+                          ),
+                          title: SmallText(text: 'Incentive', size: 20,),
+                        ),
+                      ]else...[],*/
                       const CusDivider(),
                       ListTile(
                         onTap: () {

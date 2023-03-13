@@ -185,11 +185,11 @@ class _OrderScreenState extends State<OrderScreen> {
                                           ],
                                         ),
                                         Container(
-                                          height: 50,
+                                          height: 60,
                                           width: Dimensions.height150,
                                           child: SmallText(
                                             text: dashboardController.foundDealerList[index]['xmadd'],
-                                            size: 10,
+                                            size: 8,
                                           ),
                                         )
                                       ],

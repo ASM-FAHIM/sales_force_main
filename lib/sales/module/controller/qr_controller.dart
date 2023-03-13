@@ -1,119 +1,23 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:petronas_project/sales/constant/app_constants.dart';
+import 'package:petronas_project/sales/module/controller/login_controller.dart';
 import '../model/dealer_model.dart';
 import '../model/mechanic_list_model.dart';
 import '../model/qr_return_model.dart';
 
 class QrController extends GetxController {
+  LoginController loginController = Get.find<LoginController>();
   RxString qrScannedCode = ''.obs;
   RxString firstChar = ' '.obs;
   RxString sku = ' '.obs;
   RxString batch = ' '.obs;
+  RxString disc = ' '.obs;
   RxDouble result = 0.0.obs;
-
-/*  @override
-  void onInit() {
-    // TODO: implement onInit
-
-    super.onInit();
-  }*/
-  var isLoading = true.obs;
-  List<MechanicModel> mechanicList = [];
-  Future fetchMechanicList() async {
-    try {
-      isLoading(true);
-      var response = await http.get(Uri.parse("http://${AppConstants.baseurl}/salesforce/scanner/machanic_list.php?tso=2665"));
-      mechanicList = mechanicModelFromJson(response.body);
-      print('MechanicList = $mechanicList');
-    } finally {
-      isLoading(false);
-    }
-  }
-
-  RxBool isDataFetched = false.obs;
-  QrReturnModel? qrValues;
-  Future<void> scanQRCode() async {
-    try {
-      isDataFetched(true);
-      final qrCode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-      // qrScannedCode.value = qrCode;
-      // firstChar.value = qrCode[0];
-      var response = await http.get(Uri.parse("http://${AppConstants.baseurl}/salesforce/scanner/QRcodeCheck.php?code=$qrCode"));
-      if(response.statusCode == 200){
-        qrValues = qrReturnModelFromJson(response.body);
-        qrScannedCode.value = qrValues!.code;
-        firstChar.value = qrCode[0];
-        sku.value = qrValues!.squ;
-        batch.value = qrValues!.batch;
-        isDataFetched(false);
-        print('=================${qrValues!.code} =================');
-      }else{
-        qrScannedCode.value = 'Product already Scanned';
-        Get.snackbar(
-            'Error',
-            'Product already scanned',
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            duration: const Duration(seconds: 1)
-        );
-        isDataFetched(false);
-      }
-    } on PlatformException {
-      qrScannedCode.value = 'Failed to get platform version.';
-    }
-  }
-
-
-  // for calculate total value
-  Future totalValueCalculate() async{
-    print('=================${qrScannedCode.value} =================');
-    print('=================${firstChar.value}=================');
-    if(firstChar.value == 'A'){
-      result.value = 1 * double.parse(sku.value);
-      print('-----------------$result----------');
-    }else if(firstChar.value == 'B'){
-      result.value  = 5 * double.parse(sku.value);
-      print('-----------------$result----------');
-    }else if(firstChar.value == 'C'){
-      result.value  = 10 * double.parse(sku.value);
-      print('-----------------$result----------');
-    }else if(firstChar.value == 'D'){
-      result.value  = 18 * double.parse(sku.value);
-
-      print('-----------------$result----------');
-    }else if(firstChar.value == 'E'){
-      result.value  = 30 * double.parse(sku.value);
-      print('-----------------$result----------');
-    }else{
-      Get.snackbar('title', 'message');
-    }
-    var response = await http.post(Uri.parse('http://${AppConstants.baseurl}/salesforce/scanner/QR_submit.php'),
-        body: jsonEncode(<String, dynamic>{
-          "code": qrScannedCode.value,
-          "user": "2665",
-          "tso_bp_name": "K. M. Zohir Rayhan",
-          "machanic_bkash": "8801742090667",
-          "batch": batch.value,
-          "tso_bp_id": result.toString(),
-          "area": "Dhaka 4",
-          "territory": "DHK-08",
-          "dealer_name": "Babu Engineering Works",
-        })
-    );
-    print('------------${response.body}');
-  }
-
 
   //Dealer list fetching for mechanic and qr scanner
   ///dealer fetch and insert to local db
@@ -178,5 +82,126 @@ class QrController extends GetxController {
 
   void search(String query) {
     searchQuery.value = query;
+  }
+
+
+  //Fetch Mechanic information
+  var isLoading = false.obs;
+  List<MechanicModel> mechanicList = [];
+  Future fetchMechanicList(String xcus) async {
+    try {
+      isLoading(true);
+      var response = await http.get(Uri.parse("http://${AppConstants.baseurl}/salesforce/scanner/machanic_list.php?xcus=$xcus"));
+      mechanicList = mechanicModelFromJson(response.body);
+      print('MechanicList = $mechanicList');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<void> resetMechanicList() async{
+     mechanicList = [];
+  }
+
+  RxBool isDataFetched = false.obs;
+  QrReturnModel? qrValues;
+  Future<void> scanQRCode() async {
+    try {
+      isDataFetched(true);
+      final qrCode = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666',
+        'Cancel',
+        true,
+        ScanMode.QR,
+      );
+      // qrScannedCode.value = qrCode;
+      // firstChar.value = qrCode[0];
+      var response = await http.get(Uri.parse("http://${AppConstants.baseurl}/salesforce/scanner/QRcodeCheck.php?code=$qrCode&userId=${loginController.xposition.value}"));
+      if(response.statusCode == 200){
+        qrValues = qrReturnModelFromJson(response.body);
+        qrScannedCode.value = qrValues!.xid;
+        //firstChar.value = qrCode[0];
+        sku.value = qrValues!.xbase;
+        batch.value = qrValues!.xbatch;
+        disc.value = qrValues!.xdisc;
+        isDataFetched(false);
+        print('=================${qrValues!.xid} =================');
+      }else{
+        isDataFetched(false);
+        qrScannedCode.value = 'Invalid code';
+        Get.snackbar(
+            'Error',
+            'Product already scanned',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 1)
+        );
+      }
+    } on PlatformException {
+      qrScannedCode.value = 'Failed to get platform version.';
+    }
+  }
+
+
+  // for calculate total value
+  RxBool isValuePosted = false.obs;
+  Future totalValueCalculate(String xSID, String xCUS, String tsoID, String mobileNum) async{
+    print('=================${qrScannedCode.value} =================');
+    print('=================${firstChar.value}=================');
+    try{
+      isValuePosted(true);
+      /*if(firstChar.value == 'A'){
+        result.value = 1 * double.parse(sku.value);
+        print('-----------------$result----------');
+      }else if(firstChar.value == 'B'){
+        result.value  = 2 * double.parse(sku.value);
+        print('-----------------$result----------');
+      }else if(firstChar.value == 'C'){
+        result.value  = 5 * double.parse(sku.value);
+        print('-----------------$result----------');
+      }else if(firstChar.value == 'D'){
+        result.value  = 18 * double.parse(sku.value);
+        print('-----------------$result----------');
+      }else if(firstChar.value == 'E'){
+        result.value  = 25 * double.parse(sku.value);
+        print('-----------------$result----------');
+      }else{
+        Get.snackbar('title', 'message');
+      }
+      isValuePosted(false);*/
+      var response = await http.post(Uri.parse('http://${AppConstants.baseurl}/salesforce/scanner/QR_submit.php'),
+          body: jsonEncode(<String, dynamic>{
+            "zauserid": loginController.xposition.value,
+            "zid": 300210,
+            "xid": qrScannedCode.value,
+            "xsid": xSID,
+            "xcus": xCUS,
+            "xtso": tsoID,
+            "xmobile": mobileNum,
+            "xdisc": disc.value,
+            "xbase": sku.value
+          })
+      );
+      if(response.statusCode == 200){
+        isValuePosted(false);
+        resetQrValues();
+        print('------------${response.body}');
+        print('Success: ${response.statusCode}');
+      }else{
+        isValuePosted(false);
+        print('Something went wrong: ${response.statusCode}');
+      }
+    }catch(e){
+      isValuePosted(false);
+      print('Failed to post values due to: $e');
+    }
+  }
+
+  void resetQrValues(){
+    qrScannedCode.value = ' ';
+    firstChar.value = ' ';
+    sku.value = ' ';
+    batch.value = ' ';
+    disc.value = ' ';
   }
 }

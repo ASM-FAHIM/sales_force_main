@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petronas_project/sales/module/controller/qr_controller.dart';
 import 'package:petronas_project/sales/module/view/incentive_collect/qr_screen.dart';
 import '../../../constant/colors.dart';
@@ -9,7 +8,8 @@ import '../../../widget/big_text.dart';
 import '../../../widget/small_text.dart';
 
 class IncentiveScreen extends StatefulWidget {
-  const IncentiveScreen({Key? key}) : super(key: key);
+  String xcus;
+  IncentiveScreen({required this. xcus,Key? key}) : super(key: key);
 
   @override
   State<IncentiveScreen> createState() => _IncentiveScreenState();
@@ -22,7 +22,7 @@ class _IncentiveScreenState extends State<IncentiveScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    qrController.fetchMechanicList();
+    qrController.fetchMechanicList(widget.xcus);
   }
 
   @override
@@ -33,6 +33,7 @@ class _IncentiveScreenState extends State<IncentiveScreen> {
             backgroundColor: AppColor.appBarColor,
             leading: GestureDetector(
               onTap: () {
+                qrController.resetMechanicList();
                 Get.back();
               },
               child: const Icon(
@@ -74,14 +75,19 @@ class _IncentiveScreenState extends State<IncentiveScreen> {
                     height: Dimensions.height50 + Dimensions.height20,
                     child: ListTile(
                       onTap: () {
-                        Get.to(() => QrScreen());
+                        Get.to(() =>QrScreen(
+                            xSid: qrController.mechanicList[index].xid,
+                            xCus: widget.xcus,
+                            tsoId: qrController.mechanicList[index].xtso,
+                            mobileNum: qrController.mechanicList[index].xmobile,
+                        ));
                       },
                       tileColor: AppColor.appBarColor,
                       title: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BigText(
-                            text: '${qrController.mechanicList[index].dealerName}',
+                            text: qrController.mechanicList[index].xnamem,
                             size: 20,
                             color:
                             AppColor.defWhite,
@@ -91,8 +97,8 @@ class _IncentiveScreenState extends State<IncentiveScreen> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SmallText(text: qrController.mechanicList[index].mobile, color: AppColor.defWhite, size: 15,),
-                          SmallText(text: qrController.mechanicList[index].territory, color: AppColor.defWhite),
+                          SmallText(text: qrController.mechanicList[index].xmobile, color: AppColor.defWhite, size: 15,),
+                          SmallText(text: qrController.mechanicList[index].xid, color: AppColor.defWhite),
                         ],
                       ),
                     ),
