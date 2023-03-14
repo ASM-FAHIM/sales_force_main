@@ -112,7 +112,7 @@ class _DealerListScreenState extends State<DealerListScreen> {
                                           children: [
                                             SmallText(
                                               text: qrController.filteredDeals[index].xcus,
-                                              size: 12,
+                                              size: 10,
                                             ),
                                             Container(
                                               height: 50,
@@ -125,7 +125,7 @@ class _DealerListScreenState extends State<DealerListScreen> {
                                           ],
                                         ),
                                         Container(
-                                          height: 50,
+                                          height: 60,
                                           width: Dimensions.height150,
                                           child: SmallText(
                                             text: qrController.filteredDeals[index].xmadd,

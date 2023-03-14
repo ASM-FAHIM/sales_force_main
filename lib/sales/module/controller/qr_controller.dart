@@ -8,6 +8,7 @@ import 'package:petronas_project/sales/constant/app_constants.dart';
 import 'package:petronas_project/sales/module/controller/login_controller.dart';
 import '../model/dealer_model.dart';
 import '../model/mechanic_list_model.dart';
+import '../model/mrp_notification_model.dart';
 import '../model/qr_return_model.dart';
 
 class QrController extends GetxController {
@@ -46,30 +47,7 @@ class QrController extends GetxController {
     }
   }
 
-  /*RxBool isNameFound = false.obs;
-  List foundedDealerList = [];
-  // RxBool enableDealerList = false.obs;
-  void runFilter(String keyword) async{
-    try{
-      isNameFound(true);
-      List result = [];
-      if(keyword.isEmpty){
-        result = dealerList;
-        print('====================================0000000000000000000000000$result');
-        isNameFound(false);
-      }else{
-        result = dealerList.where((name) => name.xorg.toLowerCase().contains(keyword.toLowerCase())).toList();
-        isNameFound(false);
-        print('Actual list : $result');
-      }
-      foundedDealerList = result;
-      print('Founded Dealer List: $foundedDealerList');
-      isNameFound(false);
-    }catch(e){
-      isNameFound(false);
-      print('Error Occured: $e');
-    }
-  }*/
+  //search mechanism for any name
   RxString searchQuery = ''.obs;
   List<DealerModel> get filteredDeals {
     if (searchQuery.value.isEmpty) {
@@ -128,6 +106,8 @@ class QrController extends GetxController {
         print('=================${qrValues!.xid} =================');
       }else{
         isDataFetched(false);
+        print('The qr code is: $qrCode');
+        print('The qr code is: $qrCode');
         qrScannedCode.value = 'Invalid code';
         Get.snackbar(
             'Error',
@@ -184,6 +164,13 @@ class QrController extends GetxController {
       );
       if(response.statusCode == 200){
         isValuePosted(false);
+        Get.snackbar(
+            'Success',
+            'Submitted successfully',
+            backgroundColor: Colors.white,
+            colorText: Colors.black,
+            duration: const Duration(seconds: 1)
+        );
         resetQrValues();
         print('------------${response.body}');
         print('Success: ${response.statusCode}');
@@ -203,5 +190,37 @@ class QrController extends GetxController {
     sku.value = ' ';
     batch.value = ' ';
     disc.value = ' ';
+  }
+
+  //fetch mrp notification
+  //Dealer list fetching for mechanic and qr scanner
+  ///dealer fetch and insert to local db
+  RxBool isMrpFetched = false.obs;
+  final mrpList = <MrpNotificationListModel>[].obs;
+  void getMRPNotification(String tsoId) async{
+    try{
+      isMrpFetched(true);
+      //new dealer api for petronas http://${AppConstants.baseurl}/salesforce/dealerinfo.php?user=1000
+      var response = await http.get(Uri.parse('http://172.20.20.69/salesforce/scanner/MIP_nitification.php?tso=$tsoId'));
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body);
+        final mrpNotifyList = <MrpNotificationListModel>[];
+        for(var mrpNotify in jsonData){
+          mrpNotifyList.add(MrpNotificationListModel.fromJson(mrpNotify));
+        }
+        mrpList.assignAll(mrpNotifyList);
+        isMrpFetched(false);
+        print('List of incentives: $mrpNotifyList');
+      }else{
+        isMrpFetched(false);
+        print("There is an Error ${response.statusCode}");
+      }
+    }catch(e){
+      isMrpFetched(false);
+      print("Something went wrong $e");
+    }
+  }
+  void resetMrp(){
+    mrpList.value = [];
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petronas_project/sales/module/controller/qr_controller.dart';
+import 'package:petronas_project/sales/module/view/incentive_collect/mrp_notification_screen.dart';
 import '../../../constant/colors.dart';
 import '../../../constant/dimensions.dart';
 import '../../../widget/big_text.dart';
@@ -27,13 +29,6 @@ class _QrScreenState extends State<QrScreen> {
   QrController qrController = Get.put(QrController());
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    //qrController.scanQRCode();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -53,11 +48,13 @@ class _QrScreenState extends State<QrScreen> {
               color: AppColor.defWhite,
               size: 25,
             ),
-            // actions: [
-            //   IconButton(
-            //     onPressed: () {},
-            //     icon: const Icon(MdiIcons.syncIcon, size: 30,),)
-            // ],
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Get.to(()=> MRPNotificationScreen(tsoId: widget.tsoId,));
+                },
+                icon: const Icon(MdiIcons.bellAlert, size: 30,),)
+            ],
           ),
           body: Container(
             alignment: Alignment.center,
@@ -107,6 +104,8 @@ class _QrScreenState extends State<QrScreen> {
                               margin: EdgeInsets.all(5.0),
                               child: Column(
                                 children: [
+                                  TextContainer(scannedText: 'Dealer Id : ${widget.xCus}',),
+                                  TextContainer(scannedText: 'Mechanic Id : ${widget.xSid}',),
                                   TextContainer(scannedText: 'Generated code : ${qrController.qrScannedCode}',),
                                   TextContainer(scannedText: 'SKU : ${qrController.sku}',),
                                   TextContainer(scannedText: 'Batch: ${qrController.batch}',),
@@ -114,6 +113,7 @@ class _QrScreenState extends State<QrScreen> {
                               ),
                             )
                           ),
+                        SizedBox(height: 20,),
                         Container(
                           height: Dimensions.height50,
                           width:  Dimensions.height150 - Dimensions.height20,
@@ -137,7 +137,7 @@ class _QrScreenState extends State<QrScreen> {
                             },
                             child: qrController.isValuePosted.value
                             ? CircularProgressIndicator(color: AppColor.defWhite,)
-                            : BigText(text: 'Ok', color: AppColor.defWhite,),
+                            : BigText(text: 'Submit', color: AppColor.defWhite,),
                           ),
                         )
                       ],
